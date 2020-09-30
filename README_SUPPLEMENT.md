@@ -2,10 +2,18 @@
 
 Additional info (didn't want to modify original README).
 
-## Updating PYTHONPATH
+## Setup
+
+### Installing dependencies
 
 ```bash
-export PYTHONPATH="~/projects/lanenet-lane-detection:$PYTHONPATH"
+pip install -r requirements.txt
+```
+
+### Updating PYTHONPATH
+
+```bash
+export PYTHONPATH="/path/to/lanenet-lane-detection:$PYTHONPATH"
 ```
 
 ## Testing LaneNet model
