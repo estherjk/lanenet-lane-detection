@@ -20,6 +20,11 @@ COPY build_opencv.sh .
 RUN /bin/bash build_opencv.sh
 
 # Install dependencies for LaneNet
+RUN set -xe \
+    && apt-get update \
+    && apt-get install -y python3-pip
+RUN pip3 install --upgrade pip
+
 WORKDIR /tmp
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt

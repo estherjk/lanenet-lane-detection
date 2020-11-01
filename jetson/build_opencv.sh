@@ -83,6 +83,7 @@ install_dependencies () {
         libavformat-dev \
         libavresample-dev \
         libeigen3-dev \
+        libgtk2.0-dev \
         libgstreamer-plugins-base1.0-dev \
         libgstreamer-plugins-good1.0-dev \
         libgstreamer1.0-dev \
@@ -179,7 +180,7 @@ main () {
 
     make install
 
-    cleanup
+    # cleanup
 }
 
 main "$@"
