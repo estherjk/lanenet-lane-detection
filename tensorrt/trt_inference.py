@@ -155,6 +155,10 @@ def do_inference(engine, video_src):
             # Display result
             cv2.imshow('result', postprocess_result['source_image'])
 
+            t_cost = time.time() - t_start
+            LOG.info('Inference + postprocess + display cost time: {:.5f}s'.format(t_cost))
+            LOG.info('FPS: {:.5f}s'.format(1 / t_cost))
+
             # Press 'Q' to quit
             key = cv2.waitKey(1)
             if key == ord('q'):
