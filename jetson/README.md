@@ -58,3 +58,28 @@ python3 tensorrt/trt_inference.py \
     --video_src ./data/tusimple_test_video/0.mp4 \
     --engine_file ./tensorrt/jetson.engine
 ```
+
+## Using a Raspberry Pi camera
+
+Make the device accessible when running the Docker container:
+
+```bash
+docker run -it --rm \
+    --runtime nvidia \
+    --network host \
+    --ipc=host \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix/:/tmp/.X11-unix \
+    -v /tmp/argus_socket:/tmp/argus_socket \
+    -v $PWD/..:/code \
+    lanenet-jetson:latest
+```
+
+And when running the inference script:
+
+```bash
+python3 tensorrt/trt_inference.py \
+    --onnx_file ./model/lanenet.onnx \
+    --video_src pi_camera \
+    --engine_file ./tensorrt/jetson.engine
+```

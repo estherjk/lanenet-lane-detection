@@ -11,6 +11,8 @@ from lanenet_model import lanenet_postprocess
 from local_utils.config_utils import parse_config_utils
 from local_utils.log_util import init_logger
 
+from pi_camera import video
+
 TRT_LOGGER = trt.Logger(trt.Logger.ERROR)
 trt_runtime = trt.Runtime(TRT_LOGGER)
 network_flags = 1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
@@ -21,7 +23,7 @@ LOG = init_logger.get_logger(log_file_name_prefix='lanenet_test')
 def init_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--onnx_file', type=str, help="ONNX file (.onnx)")
-    parser.add_argument('--video_src', type=str, help='The video source')
+    parser.add_argument('--video_src', type=str, help="Video source. For Pi Camera, use 'pi_camera'.")
     parser.add_argument('--engine_file', type=str, help="TensorRT engine file (.engine)")
 
     return parser.parse_args()
@@ -112,7 +114,11 @@ def do_inference(engine, video_src):
 
     with engine.create_execution_context() as context:
         # Read from video source
-        cap = cv2.VideoCapture(video_src)
+        if video_src == 'pi_camera':
+            cap = cv2.VideoCapture(video.gstreamer_pipeline(flip_method=2), cv2.CAP_GSTREAMER)
+        else:
+            cap = cv2.VideoCapture(video_src)
+
         while True:
             ret, image = cap.read()
             if not ret:
@@ -153,11 +159,12 @@ def do_inference(engine, video_src):
             )
 
             # Display result
-            cv2.imshow('result', postprocess_result['source_image'])
+            if postprocess_result['source_image'] is not None:
+                cv2.imshow('result', postprocess_result['source_image'])
 
-            t_cost = time.time() - t_start
-            LOG.info('Inference + postprocess + display cost time: {:.5f}s'.format(t_cost))
-            LOG.info('FPS: {:.5f}s'.format(1 / t_cost))
+                t_cost = time.time() - t_start
+                LOG.info('Inference + postprocess + display cost time: {:.5f}s'.format(t_cost))
+                LOG.info('FPS: {:.5f}s'.format(1 / t_cost))
 
             # Press 'Q' to quit
             key = cv2.waitKey(1)
