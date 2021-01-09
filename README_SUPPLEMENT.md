@@ -44,7 +44,7 @@ python tools/test_lanenet_video.py --weights_path ./model/tusimple_lanenet/tusim
 Freeze meta & checkpoint files:
 
 ```bash
-python tf_trt/freeze_graph.py --weights_path model/tusimple_lanenet/tusimple_lanenet.ckpt --save_path model/lanenet.pb
+python tensorrt/freeze_graph.py --weights_path model/tusimple_lanenet/tusimple_lanenet.ckpt --save_path model/lanenet.pb
 ```
 
 ### Converting frozen graph to ONNX
