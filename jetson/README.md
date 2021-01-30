@@ -30,9 +30,27 @@ docker run -it --rm \
     lanenet-jetson:latest
 ```
 
-## Inference with TensorRT
+## Using TensorRT for inference
 
-Using the sample test video:
+### Converting TensorFlow model to TensorRT
+
+Freeze meta & checkpoint files:
+
+```bash
+python tensorrt/freeze_graph.py --weights_path model/tusimple_lanenet/tusimple_lanenet.ckpt --save_path model/lanenet.pb
+```
+
+### Converting frozen graph to ONNX
+
+```bash
+python -m tf2onnx.convert \
+    --input ./model/lanenet.pb \
+    --output ./model/lanenet.onnx \
+    --inputs lanenet/input_tensor:0 \
+    --outputs lanenet/final_binary_output:0,lanenet/final_pixel_embedding_output:0
+```
+
+### Running inference with a video source
 
 ```bash
 python3 tensorrt/trt_inference.py \
